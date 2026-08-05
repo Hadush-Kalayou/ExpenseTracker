@@ -1,0 +1,23 @@
+body{
+    background:#f8f9fa;
+}
+
+.card{
+    border-radius:15px;
+}
+
+.btn{
+    border-radius:8px;
+}
+
+.form-control{
+    border-radius:8px;
+}
+
+.navbar-brand{
+    font-weight:bold;
+}
+
+footer{
+    margin-top:60px;
+}

@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}
+Expenses
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2>
+
+                <i class="bi bi-receipt-cutoff text-danger"></i>
+
+                Expenses
+
+            </h2>
+
+            <p class="text-muted">
+
+                Manage all your expense records.
+
+            </p>
+
+        </div>
+
+        <a href="{% url 'expense:expense_add' %}"
+           class="btn btn-danger">
+
+            <i class="bi bi-plus-circle"></i>
+
+            Add Expense
+
+        </a>
+
+    </div>
+
+    <form method="GET" class="mb-4">
+
+        <div class="input-group">
+
+            <input
+                type="text"
+                class="form-control"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search expenses...">
+
+            <button class="btn btn-outline-danger">
+
+                <i class="bi bi-search"></i>
+
+            </button>
+
+        </div>
+
+    </form>
+
+    <div class="card shadow">
+
+        <div class="card-body">
+
+            {% if expenses %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-danger">
+
+                        <tr>
+
+                            <th>#</th>
+                            <th>Budget</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for expense in expenses %}
+
+                        <tr>
+
+                            <td>{{ forloop.counter }}</td>
+
+                            <td>{{ expense.budget.name }}</td>
+
+                            <td>{{ expense.category.name }}</td>
+
+                            <td>{{ expense.description }}</td>
+
+                            <td>{{ expense.amount }}</td>
+
+                            <td>{{ expense.date }}</td>
+
+                            <td>
+
+                                <a href="{% url 'expense:expense_edit' expense.id %}"
+                                   class="btn btn-warning btn-sm">
+
+                                    <i class="bi bi-pencil-square"></i>
+
+                                </a>
+
+                                <a href="{% url 'expense:expense_delete' expense.id %}"
+                                   class="btn btn-danger btn-sm">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="text-center py-5">
+
+                <i class="bi bi-receipt display-1 text-secondary"></i>
+
+                <h4>No Expense Found</h4>
+
+                <p class="text-muted">
+
+                    Create your first expense.
+
+                </p>
+
+                <a href="{% url 'expense:expense_add' %}"
+                   class="btn btn-danger">
+
+                    Add Expense
+
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

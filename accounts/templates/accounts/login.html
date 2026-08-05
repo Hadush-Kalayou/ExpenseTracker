@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+
+    <div class="col-md-6 col-lg-5">
+
+        <div class="card shadow-lg">
+
+            <div class="card-header bg-primary text-white text-center">
+
+                <h3>
+                    Login
+                </h3>
+
+            </div>
+
+            <div class="card-body">
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+
+                    <div class="alert alert-danger">
+
+                        {{ form.non_field_errors }}
+
+                    </div>
+
+                    {% endif %}
+
+                    <!-- Username or Email -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Username or Email
+
+                        </label>
+
+                        {{ form.username }}
+
+                        <div class="text-danger">
+
+                            {{ form.username.errors }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Password -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Password
+
+                        </label>
+
+                        {{ form.password }}
+
+                        <div class="text-danger">
+
+                            {{ form.password.errors }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Remember Me -->
+
+                    <div class="form-check mb-3">
+
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="rememberMe">
+
+                        <label
+                            class="form-check-label"
+                            for="rememberMe">
+
+                            Remember Me
+
+                        </label>
+
+                    </div>
+
+                    <div class="d-grid">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary">
+
+                            Login
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="card-footer">
+
+                <div class="d-flex justify-content-between">
+
+                    <a href="{% url 'forgot_password' %}">
+
+                        Forgot Password?
+
+                    </a>
+
+                    <a href="{% url 'register' %}">
+
+                        Create Account
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

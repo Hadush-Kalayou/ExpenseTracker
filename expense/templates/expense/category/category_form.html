@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow">
+
+                <!-- Card Header -->
+
+                <div class="card-header bg-primary text-white">
+
+                    <h3 class="mb-0">
+
+                        <i class="bi bi-tags-fill"></i>
+
+                        {{ title }}
+
+                    </h3>
+
+                </div>
+
+                <!-- Card Body -->
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <!-- Category Name -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Category Name
+
+                            </label>
+
+                            {{ form.name }}
+
+                            {% if form.name.errors %}
+
+                                <div class="text-danger mt-1">
+
+                                    {{ form.name.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Category Type -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Category Type
+
+                            </label>
+
+                            {{ form.category_type }}
+
+                            {% if form.category_type.errors %}
+
+                                <div class="text-danger mt-1">
+
+                                    {{ form.category_type.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Description -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Description
+
+                            </label>
+
+                            {{ form.description }}
+
+                            {% if form.description.errors %}
+
+                                <div class="text-danger mt-1">
+
+                                    {{ form.description.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Color -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Color
+
+                            </label>
+
+                            {{ form.color }}
+
+                            {% if form.color.errors %}
+
+                                <div class="text-danger mt-1">
+
+                                    {{ form.color.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Icon -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Bootstrap Icon
+
+                            </label>
+
+                            {{ form.icon }}
+
+                            <small class="text-muted">
+
+                                Example:
+                                bi-wallet,
+                                bi-cart,
+                                bi-house,
+                                bi-cash,
+                                bi-bus-front
+
+                            </small>
+
+                            {% if form.icon.errors %}
+
+                                <div class="text-danger mt-1">
+
+                                    {{ form.icon.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Active -->
+
+                        <div class="form-check mb-4">
+
+                            {{ form.is_active }}
+
+                            <label class="form-check-label">
+
+                                Active Category
+
+                            </label>
+
+                        </div>
+
+                        <!-- Buttons -->
+
+                        <div class="d-flex justify-content-between">
+
+                            <a href="{% url 'expense:category_list' %}"
+                               class="btn btn-secondary">
+
+                                <i class="bi bi-arrow-left-circle"></i>
+
+                                Back
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-success">
+
+                                <i class="bi bi-check-circle"></i>
+
+                                Save Category
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

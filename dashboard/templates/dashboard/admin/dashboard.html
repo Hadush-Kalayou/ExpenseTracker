@@ -1,0 +1,345 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <!-- Welcome Card -->
+
+    <div class="row mb-4">
+
+        <div class="col-md-12">
+
+            <div class="card shadow border-0 bg-dark text-white">
+
+                <div class="card-body">
+
+                    <h2>
+
+                        <i class="bi bi-speedometer2"></i>
+
+                        Welcome, {{ request.user.full_name }}
+
+                    </h2>
+
+                    <p class="mb-0">
+
+                        Manage users, categories and monitor the Expense Tracker system.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Statistics Cards -->
+
+    <div class="row">
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card shadow border-start border-primary border-5">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Total Users
+
+                    </h6>
+
+                    <h3 class="text-primary">
+
+                        {{ total_users }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card shadow border-start border-success border-5">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Active Users
+
+                    </h6>
+
+                    <h3 class="text-success">
+
+                        {{ active_users }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card shadow border-start border-warning border-5">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Categories
+
+                    </h6>
+
+                    <h3 class="text-warning">
+
+                        {{ total_categories }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card shadow border-start border-danger border-5">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Staff Users
+
+                    </h6>
+
+                    <h3 class="text-danger">
+
+                        {{ staff_users }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Second Statistics Row -->
+
+    <div class="row">
+
+        <div class="col-lg-4 col-md-6 mb-4">
+
+            <div class="card shadow">
+
+                <div class="card-body text-center">
+
+                    <h5>Total Budgets</h5>
+
+                    <h2 class="text-primary">
+
+                        {{ total_budgets }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+
+            <div class="card shadow">
+
+                <div class="card-body text-center">
+
+                    <h5>Total Income Records</h5>
+
+                    <h2 class="text-success">
+
+                        {{ total_incomes }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4 col-md-12 mb-4">
+
+            <div class="card shadow">
+
+                <div class="card-body text-center">
+
+                    <h5>Total Expense Records</h5>
+
+                    <h2 class="text-danger">
+
+                        {{ total_expenses }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Quick Actions -->
+
+    <div class="card shadow mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h4 class="mb-0">
+
+                Quick Actions
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <a href="{% url 'expense:category_add' %}"
+               class="btn btn-primary m-2">
+
+                <i class="bi bi-tags"></i>
+
+                Add Category
+
+            </a>
+
+            <a href="#"
+               class="btn btn-success m-2">
+
+                <i class="bi bi-people"></i>
+
+                Manage Users
+
+            </a>
+
+            <a href="#"
+               class="btn btn-warning m-2">
+
+                <i class="bi bi-bar-chart"></i>
+
+                Reports
+
+            </a>
+
+            <a href="#"
+               class="btn btn-info m-2">
+
+                <i class="bi bi-gear"></i>
+
+                Settings
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Recent Users -->
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+
+                Recently Registered Users
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if recent_users %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Full Name</th>
+
+                            <th>Username</th>
+
+                            <th>Email</th>
+
+                            <th>Date Joined</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for user in recent_users %}
+
+                        <tr>
+
+                            <td>{{ user.full_name }}</td>
+
+                            <td>{{ user.username }}</td>
+
+                            <td>{{ user.email }}</td>
+
+                            <td>{{ user.date_joined|date:"d M Y" }}</td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+                <p class="text-center">
+
+                    No users found.
+
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
