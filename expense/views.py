@@ -676,6 +676,13 @@ def expense_list(request):
 # ADD EXPENSE
 # =====================================================
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+
+from .forms import ExpenseForm
+
+
 @login_required
 def expense_create(request):
 
@@ -705,26 +712,26 @@ def expense_create(request):
 
             print(form.errors)
 
+            messages.error(
+                request,
+                "Please correct the errors below."
+            )
+
     else:
 
         form = ExpenseForm(
             user=request.user
         )
 
+    context = {
+        "form": form,
+        "title": "Add Expense",
+    }
+
     return render(
-
         request,
-
         "expense/expense/expense_form.html",
-
-        {
-
-            "form": form,
-
-            "title": "Add Expense",
-
-        }
-
+        context
     )
 
 # =====================================================

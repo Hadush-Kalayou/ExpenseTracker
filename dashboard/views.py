@@ -6,9 +6,6 @@ from expense.models import Budget, Income, Expense
 from expense.models import Category
 
 
-
-
-
 # ==========================================
 # USER DASHBOARD
 # ==========================================
@@ -43,9 +40,14 @@ def user_dashboard(request):
         total=Sum("amount")
     )["total"] or 0
 
+    # Budget Remaining
     remaining_budget = total_budget - total_expense
 
-    current_balance = total_income - total_expense
+    # Income Remaining
+    remaining_income = total_income - total_expense
+
+    # Current Balance
+    current_balance = remaining_budget + remaining_income
 
     recent_expenses = expenses.order_by(
         "-expense_date"
@@ -64,6 +66,8 @@ def user_dashboard(request):
         "total_expense": total_expense,
 
         "remaining_budget": remaining_budget,
+
+        "remaining_income": remaining_income,
 
         "current_balance": current_balance,
 
@@ -106,7 +110,6 @@ def admin_dashboard(request):
             is_staff=True
         ).count(),
 
-        #"total_categories": 0,
         "total_categories": Category.objects.count(),
 
         "total_budgets": Budget.objects.count(),

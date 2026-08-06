@@ -180,34 +180,34 @@ class IncomeForm(BootstrapFormMixin, forms.ModelForm):
 # Expense Form
 # =====================================================
 
+
+
+
 class ExpenseForm(BootstrapFormMixin, forms.ModelForm):
 
     class Meta:
-
         model = Expense
 
         exclude = [
-
             "user",
             "created_at",
             "updated_at",
-
         ]
 
         widgets = {
-
             "expense_date": forms.DateInput(
                 attrs={
-                    "type": "date"
+                    "type": "date",
+                    "class": "form-control",
                 }
             ),
 
             "description": forms.Textarea(
                 attrs={
-                    "rows": 3
+                    "rows": 3,
+                    "class": "form-control",
                 }
             ),
-
         }
 
     def __init__(self, *args, **kwargs):
@@ -221,20 +221,12 @@ class ExpenseForm(BootstrapFormMixin, forms.ModelForm):
         if user:
 
             self.fields["budget"].queryset = Budget.objects.filter(
-
                 user=user,
-
                 is_active=True
-
             )
 
             self.fields["category"].queryset = Category.objects.filter(
-
-                Q(owner=user) |
-                Q(owner__isnull=True),
-
+                Q(owner=user) | Q(owner__isnull=True),
                 category_type="Expense",
-
                 is_active=True
-
             )
