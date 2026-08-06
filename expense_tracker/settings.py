@@ -28,7 +28,11 @@ SECRET_KEY = 'django-insecure-uneu+$#0lm!70&w@3=(gwc73we@p69e4*&vlj&zq5p0ob3@dtf
 DEBUG = True
 
 #DEBUG = False
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+     "expense_tracker.onrender.com",
+        "localhost",
+        "127.0.0.1",
+]
 
 
 # Application definition
