@@ -34,7 +34,7 @@ DEBUG = os.environ.get(
 
 #DEBUG = False
 ALLOWED_HOSTS = [
-    "expensetracker-w549.onrender.com",
+    ".onrender.com",
     "localhost",
     "127.0.0.1",
 ]
