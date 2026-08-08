@@ -4,6 +4,7 @@
 {{ title }}
 {% endblock %}
 
+
 {% block content %}
 
 <div class="container mt-4">
@@ -14,6 +15,7 @@
 
             <div class="card shadow">
 
+
                 <div class="card-header bg-danger text-white">
 
                     <h3>
@@ -23,85 +25,276 @@
 
                 </div>
 
+
                 <div class="card-body">
 
+
                     {% if messages %}
+
                         {% for message in messages %}
+
                             <div class="alert alert-{{ message.tags }}">
+
                                 {{ message }}
+
                             </div>
+
                         {% endfor %}
+
                     {% endif %}
 
+
+
                     {% if form.errors %}
-                        <div class="alert alert-danger">
-                            <strong>Please correct the errors below.</strong>
-                            {{ form.errors }}
-                        </div>
+
+                    <div class="alert alert-danger">
+
+                        <strong>
+                            Please correct the errors below.
+                        </strong>
+
+                        {{ form.errors }}
+
+                    </div>
+
                     {% endif %}
+
+
+
 
                     <form method="POST">
 
                         {% csrf_token %}
 
+
+
+                        <!-- Payment Source -->
+
                         <div class="mb-3">
+
                             <label class="form-label">
+
+                                Payment Source
+
+                            </label>
+
+
+                            {{ form.payment_source }}
+
+
+                            <small class="text-muted">
+
+                                Select whether this expense is paid from Budget or Income.
+
+                            </small>
+
+
+                        </div>
+
+
+
+
+
+                        <!-- Budget -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
                                 Budget
+
                             </label>
+
+
                             {{ form.budget }}
+
+
+                            <small class="text-muted">
+
+                                Required when payment source is Budget.
+
+                            </small>
+
+
                         </div>
 
+
+
+
+
+
+                        <!-- Category -->
+
                         <div class="mb-3">
+
+
                             <label class="form-label">
+
                                 Expense Category
+
                             </label>
+
+
                             {{ form.category }}
+
+
+
+                            <div class="mt-2">
+
+                                <a href="{% url 'expense:category_create' %}"
+                                   class="btn btn-outline-primary btn-sm">
+
+                                    <i class="bi bi-plus-circle"></i>
+
+                                    Create New Category
+
+                                </a>
+
+
+                            </div>
+
+
+
+                            <small class="text-muted">
+
+                                Choose a default category or create your own.
+
+                            </small>
+
+
+
                         </div>
 
+
+
+
+
+
+                        <!-- Description -->
+
+
                         <div class="mb-3">
+
+
                             <label class="form-label">
+
                                 Description
+
                             </label>
+
+
                             {{ form.description }}
+
+
                         </div>
 
+
+
+
+
+
+
+                        <!-- Amount -->
+
+
                         <div class="mb-3">
+
+
                             <label class="form-label">
+
                                 Amount
+
                             </label>
+
+
                             {{ form.amount }}
+
+
                         </div>
 
+
+
+
+
+
+
+                        <!-- Date -->
+
+
                         <div class="mb-3">
+
+
                             <label class="form-label">
+
                                 Expense Date
+
                             </label>
+
+
                             {{ form.expense_date }}
+
+
                         </div>
+
+
+
+
+
+
+
 
                         <div class="d-flex justify-content-between">
 
+
                             <a href="{% url 'expense:expense_list' %}"
                                class="btn btn-secondary">
+
+
+                                <i class="bi bi-arrow-left"></i>
+
                                 Back
+
+
                             </a>
 
-                            <button type="submit" class="btn btn-danger">
+
+
+
+
+                            <button type="submit"
+                                    class="btn btn-danger">
+
+
+                                <i class="bi bi-check-circle"></i>
+
                                 Save Expense
+
+
                             </button>
+
+
 
                         </div>
 
+
+
                     </form>
+
+
 
                 </div>
 
+
             </div>
+
 
         </div>
 
+
     </div>
 
+
 </div>
+
 
 {% endblock %}

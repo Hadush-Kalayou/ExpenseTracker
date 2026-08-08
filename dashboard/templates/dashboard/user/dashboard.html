@@ -288,6 +288,33 @@ User Dashboard
                         Categories
 
                     </a>
+                    
+                    <a href="{% url 'expense:budget_list' %}"
+                       class="btn btn-primary m-2">
+
+                        <i class="bi bi-tags"></i>
+
+                        Budgets
+
+                    </a>
+                    
+                    <a href="{% url 'expense:income_list' %}"
+                       class="btn btn-success m-2">
+
+                        <i class="bi bi-tags"></i>
+
+                    Incomes
+
+                    </a>
+                    
+                    <a href="{% url 'expense:expense_list' %}"
+                       class="btn btn-danger m-2">
+
+                        <i class="bi bi-tags"></i>
+
+                        Expenses
+
+                    </a>
 
                 </div>
 
@@ -298,25 +325,36 @@ User Dashboard
     </div>
 
 
-    <!-- Recent Expenses -->
+  
+<!-- ========================================== -->
+<!-- RECENT EXPENSES & RECENT INCOME -->
+<!-- ========================================== -->
 
-    <div class="row">
+<div class="row">
 
-        <div class="col-lg-6">
+    <!-- ====================================== -->
+    <!-- RECENT EXPENSES -->
+    <!-- ====================================== -->
 
-            <div class="card shadow mb-4">
+    <div class="col-lg-6 mb-4">
 
-                <div class="card-header bg-danger text-white">
+        <div class="card shadow h-100">
 
-                    Recent Expenses
+            <div class="card-header bg-danger text-white">
 
-                </div>
+                <i class="bi bi-receipt-cutoff"></i>
 
-                <div class="card-body">
+                Recent Expenses
 
-                    {% if recent_expenses %}
+            </div>
 
-                        <table class="table table-hover">
+            <div class="card-body">
+
+                {% if recent_expenses %}
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
 
                             <thead>
 
@@ -336,15 +374,21 @@ User Dashboard
 
                                 {% for expense in recent_expenses %}
 
-                                <tr>
+                                    <tr>
 
-                                    <td>{{ expense_date.date }}</td>
+                                        <td>
+                                            {{ expense.expense_date }}
+                                        </td>
 
-                                    <td>{{ expense.category }}</td>
+                                        <td>
+                                            {{ expense.category|default:"-" }}
+                                        </td>
 
-                                    <td>{{ expense.amount }}</td>
+                                        <td>
+                                            {{ expense.amount }}
+                                        </td>
 
-                                </tr>
+                                    </tr>
 
                                 {% endfor %}
 
@@ -352,36 +396,52 @@ User Dashboard
 
                         </table>
 
-                    {% else %}
+                    </div>
 
-                        <p>No expense records.</p>
+                {% else %}
 
-                    {% endif %}
+                    <div class="text-center text-muted py-4">
 
-                </div>
+                        <i class="bi bi-receipt display-6"></i>
+
+                        <p class="mt-2 mb-0">
+                            No expense records.
+                        </p>
+
+                    </div>
+
+                {% endif %}
 
             </div>
 
         </div>
 
+    </div>
 
-        <!-- Recent Income -->
 
-        <div class="col-lg-6">
+    <!-- ====================================== -->
+    <!-- RECENT INCOME -->
+    <!-- ====================================== -->
 
-            <div class="card shadow mb-4">
+    <div class="col-lg-6 mb-4">
 
-                <div class="card-header bg-success text-white">
+        <div class="card shadow h-100">
 
-                    Recent Income
+            <div class="card-header bg-success text-white">
 
-                </div>
+                <i class="bi bi-cash-stack"></i>
 
-                <div class="card-body">
+                Recent Income
 
-                    {% if recent_incomes %}
+            </div>
 
-                        <table class="table table-hover">
+            <div class="card-body">
+
+                {% if recent_incomes %}
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
 
                             <thead>
 
@@ -401,15 +461,21 @@ User Dashboard
 
                                 {% for income in recent_incomes %}
 
-                                <tr>
+                                    <tr>
 
-                                    <td>{{ income.income_date }}</td>
+                                        <td>
+                                            {{ income.income_date }}
+                                        </td>
 
-                                    <td>{{ income.source }}</td>
+                                        <td>
+                                            {{ income.source }}
+                                        </td>
 
-                                    <td>{{ income.amount }}</td>
+                                        <td>
+                                            {{ income.amount }}
+                                        </td>
 
-                                </tr>
+                                    </tr>
 
                                 {% endfor %}
 
@@ -417,19 +483,30 @@ User Dashboard
 
                         </table>
 
-                    {% else %}
+                    </div>
 
-                        <p>No income records.</p>
+                {% else %}
 
-                    {% endif %}
+                    <div class="text-center text-muted py-4">
 
-                </div>
+                        <i class="bi bi-cash-stack display-6"></i>
+
+                        <p class="mt-2 mb-0">
+                            No income records.
+                        </p>
+
+                    </div>
+
+                {% endif %}
 
             </div>
 
         </div>
 
     </div>
+
+</div>
+
 
 </div>
 

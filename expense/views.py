@@ -34,27 +34,40 @@ from django.http import HttpResponse
 # Create your views here.
 
 
+
 @login_required
 def category_list(request):
 
-    search = request.GET.get("search")
+    search = request.GET.get("search", "")
 
-    categories = Category.objects.filter(
-
-        Q(owner=request.user) |
-        Q(owner__isnull=True)
-
+    # System/default categories
+    system_categories = Category.objects.filter(
+        owner__isnull=True,
+        is_active=True
     )
 
+    # User's own categories
+    user_categories = Category.objects.filter(
+        owner=request.user
+    )
+
+    # Search user's categories
     if search:
 
-        categories = categories.filter(
+        user_categories = user_categories.filter(
+            name__icontains=search
+        )
+
+        system_categories = system_categories.filter(
             name__icontains=search
         )
 
     context = {
 
-        "categories": categories,
+        "system_categories": system_categories,
+
+        "categories": user_categories,
+
         "search": search,
 
     }
@@ -64,6 +77,7 @@ def category_list(request):
         "expense/category/category_list.html",
         context,
     )
+
 
 
 @login_required
@@ -77,32 +91,46 @@ def category_create(request):
 
             category = form.save(commit=False)
 
-            # Admin creates global categories
+
+            # Admin creates public/system categories
             if request.user.is_staff:
 
                 category.owner = None
 
-            # Users create personal categories
+
+            # Normal users create personal categories
             else:
 
                 category.owner = request.user
 
+
+
             category.save()
+
 
             messages.success(
                 request,
                 "Category added successfully."
             )
 
-            return redirect("expense:category_list")
+
+            # Return to expense creation
+            return redirect(
+                "expense:expense_create"
+            )
+
 
         else:
 
             print(form.errors)
 
+
+
     else:
 
         form = CategoryForm()
+
+
 
     return render(
         request,
@@ -112,7 +140,6 @@ def category_create(request):
             "title": "Add Category",
         }
     )
-
 @login_required
 def category_update(request, pk):
 
@@ -474,11 +501,9 @@ def income_create(request):
                 "Income added successfully."
             )
 
-            return redirect("expense:income_list")
-
-        else:
-
-            print(form.errors)
+            return redirect(
+                "expense:income_list"
+            )
 
     else:
 
@@ -487,21 +512,13 @@ def income_create(request):
         )
 
     return render(
-
         request,
-
         "expense/income/income_form.html",
-
         {
-
             "form": form,
-
             "title": "Add Income",
-
         }
-
     )
-
 # =====================================================
 # EDIT INCOME
 # =====================================================
@@ -510,34 +527,17 @@ def income_create(request):
 def income_update(request, pk):
 
     income = get_object_or_404(
-
         Income,
-
         pk=pk,
-
         user=request.user,
-
     )
 
     if request.method == "POST":
 
         form = IncomeForm(
-
             request.POST,
-
             instance=income,
-
-        )
-
-        form.fields["category"].queryset = Category.objects.filter(
-
-            Q(owner=request.user) |
-            Q(owner__isnull=True),
-
-            category_type="Income",
-
-            is_active=True,
-
+            user=request.user,
         )
 
         if form.is_valid():
@@ -545,47 +545,29 @@ def income_update(request, pk):
             form.save()
 
             messages.success(
-
                 request,
-
                 "Income updated successfully."
-
             )
 
-            return redirect("expense:income_list")
+            return redirect(
+                "expense:income_list"
+            )
 
     else:
 
-        form = IncomeForm(instance=income)
-
-        form.fields["category"].queryset = Category.objects.filter(
-
-            Q(owner=request.user) |
-            Q(owner__isnull=True),
-
-            category_type="Income",
-
-            is_active=True,
-
+        form = IncomeForm(
+            instance=income,
+            user=request.user,
         )
 
     return render(
-
         request,
-
         "expense/income/income_form.html",
-
         {
-
             "form": form,
-
             "title": "Edit Income",
-
         }
-
     )
-
-
 
 # =====================================================
 # DELETE INCOME

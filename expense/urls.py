@@ -22,6 +22,12 @@ urlpatterns = [
         name="category_add"
     ),
 
+       path(
+        "category/create/",
+        views.category_create,
+        name="category_create"
+    ),
+
     path(
         "categories/<int:pk>/edit/",
         views.category_update,

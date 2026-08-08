@@ -16,6 +16,10 @@ def user_dashboard(request):
     if request.user.is_staff:
         return redirect("admin_dashboard")
 
+    # ------------------------------------------
+    # Querysets
+    # ------------------------------------------
+
     budgets = Budget.objects.filter(
         user=request.user
     )
@@ -28,6 +32,10 @@ def user_dashboard(request):
         user=request.user
     )
 
+    # ------------------------------------------
+    # Totals
+    # ------------------------------------------
+
     total_budget = budgets.aggregate(
         total=Sum("amount")
     )["total"] or 0
@@ -36,18 +44,53 @@ def user_dashboard(request):
         total=Sum("amount")
     )["total"] or 0
 
-    total_expense = expenses.aggregate(
+    # ------------------------------------------
+    # Budget Expenses
+    # ------------------------------------------
+
+    budget_expense = expenses.filter(
+        payment_source="Budget"
+    ).aggregate(
         total=Sum("amount")
     )["total"] or 0
 
-    # Budget Remaining
-    remaining_budget = total_budget - total_expense
+    # ------------------------------------------
+    # Income Expenses
+    # ------------------------------------------
 
-    # Income Remaining
-    remaining_income = total_income - total_expense
+    income_expense = expenses.filter(
+        payment_source="Income"
+    ).aggregate(
+        total=Sum("amount")
+    )["total"] or 0
 
+    # ------------------------------------------
+    # Total Expenses
+    # ------------------------------------------
+
+    total_expense = budget_expense + income_expense
+
+    # ------------------------------------------
+    # Remaining Budget
+    # ------------------------------------------
+
+    remaining_budget = total_budget - budget_expense
+
+    # ------------------------------------------
+    # Remaining Income
+    # ------------------------------------------
+
+    remaining_income = total_income - income_expense
+
+    # ------------------------------------------
     # Current Balance
+    # ------------------------------------------
+
     current_balance = remaining_budget + remaining_income
+
+    # ------------------------------------------
+    # Recent Transactions
+    # ------------------------------------------
 
     recent_expenses = expenses.order_by(
         "-expense_date"
@@ -57,11 +100,19 @@ def user_dashboard(request):
         "-income_date"
     )[:5]
 
+    # ------------------------------------------
+    # Context
+    # ------------------------------------------
+
     context = {
 
         "total_budget": total_budget,
 
         "total_income": total_income,
+
+        "budget_expense": budget_expense,
+
+        "income_expense": income_expense,
 
         "total_expense": total_expense,
 

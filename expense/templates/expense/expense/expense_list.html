@@ -75,7 +75,7 @@ Expenses
                         <tr>
 
                             <th>#</th>
-                            <th>Budget</th>
+                            <th>Payment Source</th>
                             <th>Category</th>
                             <th>Description</th>
                             <th>Amount</th>
@@ -94,7 +94,7 @@ Expenses
 
                             <td>{{ forloop.counter }}</td>
 
-                            <td>{{ expense.budget.name }}</td>
+                            <td>{{ expense.source.name }}</td>
 
                             <td>{{ expense.category.name }}</td>
 
@@ -158,6 +158,10 @@ Expenses
             {% endif %}
 
         </div>
+                  <a href="{% url 'user_dashboard' %}" class="btn btn-primary">
+    <i class="bi bi-arrow-left"></i>
+    Back to Dashboard
+</a>
 
     </div>
 

@@ -12,6 +12,8 @@ from django.core.exceptions import ValidationError
 # CATEGORY MODEL
 # =====================================================
 
+
+
 class Category(models.Model):
 
     CATEGORY_TYPE = [
@@ -19,13 +21,20 @@ class Category(models.Model):
         ("Expense", "Expense"),
     ]
 
-    name = models.CharField(max_length=100)
+
+    name = models.CharField(
+        max_length=100
+    )
+
 
     category_type = models.CharField(
         max_length=20,
         choices=CATEGORY_TYPE
     )
 
+
+    # None = public/system category
+    # User = personal category
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -34,39 +43,62 @@ class Category(models.Model):
         related_name="categories"
     )
 
+
     description = models.TextField(
         blank=True,
         null=True
     )
+
 
     color = models.CharField(
         max_length=20,
         default="#0d6efd"
     )
 
+
     icon = models.CharField(
         max_length=100,
         blank=True
     )
 
+
     is_active = models.BooleanField(
         default=True
     )
+
 
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
+
     updated_at = models.DateTimeField(
         auto_now=True
     )
 
+
     class Meta:
+
         ordering = ["name"]
+
+        constraints = [
+
+            models.UniqueConstraint(
+                fields=[
+                    "name",
+                    "category_type",
+                    "owner"
+                ],
+                name="unique_category_per_owner"
+            )
+
+        ]
+
 
     def __str__(self):
 
         if self.owner:
+
             return f"{self.name} ({self.owner.username})"
 
         return f"{self.name} (System)"
@@ -234,7 +266,23 @@ class Income(models.Model):
 # EXPENSE MODEL
 # =====================================================
 
+# =====================================================
+# EXPENSE MODEL
+# =====================================================
+
 class Expense(models.Model):
+
+    # ==========================================
+    # PAYMENT SOURCE
+    # ==========================================
+
+    PAYMENT_SOURCE = [
+
+        ("Budget", "Budget"),
+
+        ("Income", "Income"),
+
+    ]
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -242,10 +290,19 @@ class Expense(models.Model):
         related_name="expenses"
     )
 
+    # Optional because Income expenses do not require a budget
     budget = models.ForeignKey(
         Budget,
         on_delete=models.CASCADE,
-        related_name="expenses"
+        related_name="expenses",
+        null=True,
+        blank=True
+    )
+
+    payment_source = models.CharField(
+        max_length=20,
+        choices=PAYMENT_SOURCE,
+        default="Budget"
     )
 
     category = models.ForeignKey(
@@ -275,19 +332,31 @@ class Expense(models.Model):
     class Meta:
         ordering = ["-expense_date"]
 
-
     # =====================================================
-    # VALIDATE EXPENSE AGAINST BUDGET
+    # VALIDATION
     # =====================================================
 
     def clean(self):
 
-        if self.budget:
+        from django.core.exceptions import ValidationError
+
+        # Budget expense must have a budget
+        if self.payment_source == "Budget":
+
+            if not self.budget:
+
+                raise ValidationError({
+
+                    "budget":
+                    "Please select a budget."
+
+                })
 
             remaining = self.budget.remaining_budget
 
-            # Exclude this expense when editing
+            # Ignore current record while editing
             if self.pk:
+
                 remaining += self.amount
 
             if self.amount > remaining:
@@ -299,6 +368,14 @@ class Expense(models.Model):
 
                 })
 
+        # Income expense should not be linked to a budget
+        elif self.payment_source == "Income":
+
+            self.budget = None
+
+    # =====================================================
+    # SAVE
+    # =====================================================
 
     def save(self, *args, **kwargs):
 
@@ -306,7 +383,10 @@ class Expense(models.Model):
 
         super().save(*args, **kwargs)
 
+    # =====================================================
+    # STRING
+    # =====================================================
 
     def __str__(self):
 
-        return self.description
+        return f"{self.description} ({self.payment_source})"

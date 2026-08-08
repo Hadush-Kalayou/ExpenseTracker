@@ -121,6 +121,10 @@ class BudgetForm(BootstrapFormMixin, forms.ModelForm):
 # Income Form
 # =====================================================
 
+# =====================================================
+# Income Form
+# =====================================================
+
 class IncomeForm(BootstrapFormMixin, forms.ModelForm):
 
     class Meta:
@@ -130,6 +134,7 @@ class IncomeForm(BootstrapFormMixin, forms.ModelForm):
         exclude = [
 
             "user",
+            "category",
             "created_at",
             "updated_at",
 
@@ -139,13 +144,15 @@ class IncomeForm(BootstrapFormMixin, forms.ModelForm):
 
             "income_date": forms.DateInput(
                 attrs={
-                    "type": "date"
+                    "type": "date",
+                    "class": "form-control",
                 }
             ),
 
             "description": forms.Textarea(
                 attrs={
-                    "rows": 3
+                    "rows": 3,
+                    "class": "form-control",
                 }
             ),
 
@@ -153,39 +160,19 @@ class IncomeForm(BootstrapFormMixin, forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
 
-        user = kwargs.pop("user", None)
+        kwargs.pop("user", None)
 
         super().__init__(*args, **kwargs)
 
         self.apply_bootstrap()
-
-        if user:
-
-            self.fields["category"].queryset = Category.objects.filter(
-
-                Q(owner=user) |
-                Q(owner__isnull=True),
-
-                category_type="Income",
-
-                is_active=True
-
-            )
-
 # =====================================================
 # Expense Form
 # =====================================================
-
-# =====================================================
-# Expense Form
-# =====================================================
-
-
-
 
 class ExpenseForm(BootstrapFormMixin, forms.ModelForm):
 
     class Meta:
+
         model = Expense
 
         exclude = [
@@ -195,6 +182,13 @@ class ExpenseForm(BootstrapFormMixin, forms.ModelForm):
         ]
 
         widgets = {
+
+            "payment_source": forms.Select(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+
             "expense_date": forms.DateInput(
                 attrs={
                     "type": "date",
@@ -208,6 +202,7 @@ class ExpenseForm(BootstrapFormMixin, forms.ModelForm):
                     "class": "form-control",
                 }
             ),
+
         }
 
     def __init__(self, *args, **kwargs):
@@ -230,3 +225,25 @@ class ExpenseForm(BootstrapFormMixin, forms.ModelForm):
                 category_type="Expense",
                 is_active=True
             )
+
+        self.fields["budget"].required = False
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        payment_source = cleaned_data.get("payment_source")
+        budget = cleaned_data.get("budget")
+
+        if payment_source == "Budget" and not budget:
+
+            self.add_error(
+                "budget",
+                "Please select a budget."
+            )
+
+        if payment_source == "Income":
+
+            cleaned_data["budget"] = None
+
+        return cleaned_data

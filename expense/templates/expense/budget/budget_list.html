@@ -27,7 +27,7 @@ Budgets
             </p>
 
         </div>
-
+     
         <a href="{% url 'expense:budget_add' %}"
            class="btn btn-primary">
 
@@ -36,6 +36,7 @@ Budgets
             Add Budget
 
         </a>
+  
 
     </div>
 
@@ -235,13 +236,20 @@ Budgets
                     Add Budget
 
                 </a>
+                <a href="{% url 'user_dashboard' %}" class="btn btn-primary">
+    <i class="bi bi-arrow-left"></i>
+    Back to Dashboard
+</a>
 
             </div>
 
             {% endif %}
 
         </div>
-
+               <a href="{% url 'user_dashboard' %}" class="btn btn-primary">
+    <i class="bi bi-arrow-left"></i>
+    Back to Dashboard
+</a>
     </div>
 
 </div>

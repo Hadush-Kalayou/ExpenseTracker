@@ -16,7 +16,7 @@
 
                 <div class="card-header bg-success text-white">
 
-                    <h3>
+                    <h3 class="mb-0">
 
                         <i class="bi bi-cash-stack"></i>
 
@@ -28,9 +28,42 @@
 
                 <div class="card-body">
 
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                            <div class="alert alert-{{ message.tags }}">
+
+                                {{ message }}
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+
+                    {% if form.errors %}
+
+                        <div class="alert alert-danger">
+
+                            <strong>
+                                Please correct the errors below.
+                            </strong>
+
+                            {{ form.errors }}
+
+                        </div>
+
+                    {% endif %}
+
+
                     <form method="POST">
 
                         {% csrf_token %}
+
+
+                        <!-- Income Source -->
 
                         <div class="mb-3">
 
@@ -44,17 +77,8 @@
 
                         </div>
 
-                        <div class="mb-3">
 
-                            <label class="form-label">
-
-                                Category
-
-                            </label>
-
-                            {{ form.category }}
-
-                        </div>
+                        <!-- Amount -->
 
                         <div class="mb-3">
 
@@ -68,17 +92,23 @@
 
                         </div>
 
-                       <div class="mb-3">
 
-                    <label class="form-label">
+                        <!-- Income Date -->
 
-                      Income Date
+                        <div class="mb-3">
 
-                       </label>
+                            <label class="form-label">
 
-                   {{ form.income_date }}
+                                Income Date
 
-                    </div>
+                            </label>
+
+                            {{ form.income_date }}
+
+                        </div>
+
+
+                        <!-- Description -->
 
                         <div class="mb-3">
 
@@ -92,16 +122,29 @@
 
                         </div>
 
+
+                        <!-- Buttons -->
+
                         <div class="d-flex justify-content-between">
 
-                            <a href="{% url 'expense:income_list' %}"
-                               class="btn btn-secondary">
+                            <a
+                                href="{% url 'expense:income_list' %}"
+                                class="btn btn-secondary"
+                            >
+
+                                <i class="bi bi-arrow-left"></i>
 
                                 Back
 
                             </a>
 
-                            <button class="btn btn-success">
+
+                            <button
+                                type="submit"
+                                class="btn btn-success"
+                            >
+
+                                <i class="bi bi-check-circle"></i>
 
                                 Save Income
 
