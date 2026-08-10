@@ -60,112 +60,15 @@
 
                         </div>
 
-                        <!-- Category Type -->
+                       
 
-                        <div class="mb-3">
 
-                            <label class="form-label">
+                     
 
-                                Category Type
+                        
 
-                            </label>
+                               
 
-                            {{ form.category_type }}
-
-                            {% if form.category_type.errors %}
-
-                                <div class="text-danger mt-1">
-
-                                    {{ form.category_type.errors }}
-
-                                </div>
-
-                            {% endif %}
-
-                        </div>
-
-                        <!-- Description -->
-
-                        <div class="mb-3">
-
-                            <label class="form-label">
-
-                                Description
-
-                            </label>
-
-                            {{ form.description }}
-
-                            {% if form.description.errors %}
-
-                                <div class="text-danger mt-1">
-
-                                    {{ form.description.errors }}
-
-                                </div>
-
-                            {% endif %}
-
-                        </div>
-
-                        <!-- Color -->
-
-                        <div class="mb-3">
-
-                            <label class="form-label">
-
-                                Color
-
-                            </label>
-
-                            {{ form.color }}
-
-                            {% if form.color.errors %}
-
-                                <div class="text-danger mt-1">
-
-                                    {{ form.color.errors }}
-
-                                </div>
-
-                            {% endif %}
-
-                        </div>
-
-                        <!-- Icon -->
-
-                        <div class="mb-3">
-
-                            <label class="form-label">
-
-                                Bootstrap Icon
-
-                            </label>
-
-                            {{ form.icon }}
-
-                            <small class="text-muted">
-
-                                Example:
-                                bi-wallet,
-                                bi-cart,
-                                bi-house,
-                                bi-cash,
-                                bi-bus-front
-
-                            </small>
-
-                            {% if form.icon.errors %}
-
-                                <div class="text-danger mt-1">
-
-                                    {{ form.icon.errors }}
-
-                                </div>
-
-                            {% endif %}
-
-                        </div>
 
                         <!-- Active -->
 
@@ -210,7 +113,10 @@
                 </div>
 
             </div>
-
+                <a href="{% url 'user_dashboard' %}" class="btn btn-primary">
+    <i class="bi bi-arrow-left"></i>
+    Back to Dashboard
+</a>
         </div>
 
     </div>
