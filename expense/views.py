@@ -30,6 +30,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+
+
+
 
 # Create your views here.
 
@@ -37,49 +43,40 @@ from django.http import HttpResponse
 
 @login_required
 def category_list(request):
+    search = request.GET.get("search", "").strip()
 
-    search = request.GET.get("search", "")
+    # Default categories
+    default_categories = Category.objects.filter(
+        is_default=True
+    ).order_by("name")
 
-    # System/default categories
-    system_categories = Category.objects.filter(
-        owner__isnull=True,
-        is_active=True
-    )
-
-    # User's own categories
+    # User-created categories
     user_categories = Category.objects.filter(
-        owner=request.user
-    )
+        owner=request.user,
+        is_default=False
+    ).order_by("name")
 
-    # Search user's categories
+    # Search
     if search:
+        default_categories = default_categories.filter(
+            name__icontains=search
+        )
 
         user_categories = user_categories.filter(
             name__icontains=search
         )
 
-        system_categories = system_categories.filter(
-            name__icontains=search
-        )
-
     context = {
-
-        "system_categories": system_categories,
-
-        "categories": user_categories,
-
+        "default_categories": default_categories,
+        "user_categories": user_categories,
         "search": search,
-
     }
 
     return render(
         request,
         "expense/category/category_list.html",
-        context,
+        context
     )
-
-
-
 @login_required
 def category_create(request):
 
@@ -91,54 +88,25 @@ def category_create(request):
 
             category = form.save(commit=False)
 
-
-            # Admin creates public/system categories
-            if request.user.is_staff:
-
-                category.owner = None
-
-
-            # Normal users create personal categories
-            else:
-
-                category.owner = request.user
-
-
+            category.owner = request.user
+            category.is_default = False
 
             category.save()
 
-
-            messages.success(
-                request,
-                "Category added successfully."
-            )
-
-
-            # Return to expense creation
-            return redirect(
-                "expense:expense_create"
-            )
-
-
-        else:
-
-            print(form.errors)
-
-
+            return redirect("expense:category_list")
 
     else:
 
         form = CategoryForm()
 
-
+    context = {
+        "form": form,
+    }
 
     return render(
         request,
         "expense/category/category_form.html",
-        {
-            "form": form,
-            "title": "Add Category",
-        }
+        context
     )
 @login_required
 def category_update(request, pk):
@@ -658,11 +626,7 @@ def expense_list(request):
 # ADD EXPENSE
 # =====================================================
 
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
 
-from .forms import ExpenseForm
 
 
 @login_required
@@ -683,21 +647,7 @@ def expense_create(request):
 
             expense.save()
 
-            messages.success(
-                request,
-                "Expense added successfully."
-            )
-
             return redirect("expense:expense_list")
-
-        else:
-
-            print(form.errors)
-
-            messages.error(
-                request,
-                "Please correct the errors below."
-            )
 
     else:
 
@@ -707,7 +657,6 @@ def expense_create(request):
 
     context = {
         "form": form,
-        "title": "Add Expense",
     }
 
     return render(
@@ -715,6 +664,7 @@ def expense_create(request):
         "expense/expense/expense_form.html",
         context
     )
+
 
 # =====================================================
 # EDIT EXPENSE
@@ -724,83 +674,44 @@ def expense_create(request):
 def expense_update(request, pk):
 
     expense = get_object_or_404(
-
         Expense,
-
         pk=pk,
-
         user=request.user
-
     )
 
     if request.method == "POST":
 
         form = ExpenseForm(
             request.POST,
-            instance=expense
-        )
-
-        form.fields["budget"].queryset = Budget.objects.filter(
-            user=request.user,
-            is_active=True
-        )
-
-        form.fields["category"].queryset = Category.objects.filter(
-
-            Q(owner=request.user) |
-            Q(owner__isnull=True),
-
-            category_type="Expense",
-
-            is_active=True
-
+            instance=expense,
+            user=request.user
         )
 
         if form.is_valid():
 
-            form.save()
+            expense = form.save(commit=False)
 
-            messages.success(
-                request,
-                "Expense updated successfully."
-            )
+            expense.user = request.user
+            expense.save()
 
             return redirect("expense:expense_list")
 
     else:
 
-        form = ExpenseForm(instance=expense)
-
-        form.fields["budget"].queryset = Budget.objects.filter(
-            user=request.user,
-            is_active=True
+        form = ExpenseForm(
+            instance=expense,
+            user=request.user
         )
 
-        form.fields["category"].queryset = Category.objects.filter(
-
-            Q(owner=request.user) |
-            Q(owner__isnull=True),
-
-            category_type="Expense",
-
-            is_active=True
-
-        )
+    context = {
+        "form": form,
+        "expense": expense,
+    }
 
     return render(
-
         request,
-
         "expense/expense/expense_form.html",
-
-        {
-
-            "form": form,
-
-            "title": "Edit Expense",
-
-        }
-
+        context
     )
 
 # =====================================================

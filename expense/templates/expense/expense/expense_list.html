@@ -47,7 +47,7 @@ Expenses
                 type="text"
                 class="form-control"
                 name="search"
-                value="{{ search }}"
+                value="{{ search|default:''}}"
                 placeholder="Search expenses...">
 
             <button class="btn btn-outline-danger">

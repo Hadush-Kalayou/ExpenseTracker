@@ -80,7 +80,10 @@ def user_dashboard(request):
     # Remaining Income
     # ------------------------------------------
 
-    remaining_income = total_income - income_expense
+    remaining_income = max(
+        total_income - income_expense,
+    0
+)
 
     # ------------------------------------------
     # Current Balance

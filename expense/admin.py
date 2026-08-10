@@ -20,21 +20,18 @@ class CategoryAdmin(admin.ModelAdmin):
 
     list_display = (
         "name",
-        "category_type",
         "owner",
-        "is_active",
+        "is_default",
         "created_at",
     )
 
     list_filter = (
-        "category_type",
-        "is_active",
+        "is_default",
         "created_at",
     )
 
     search_fields = (
         "name",
-        "description",
         "owner__username",
     )
 
@@ -90,14 +87,14 @@ class IncomeAdmin(admin.ModelAdmin):
     list_display = (
         "source",
         "user",
-        "category",
+        
         "amount",
         "income_date",
     )
 
     list_filter = (
+        "user",
         "income_date",
-        "category",
     )
 
     search_fields = (
